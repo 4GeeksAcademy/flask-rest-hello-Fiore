@@ -36,14 +36,88 @@ def handle_invalid_usage(error):
 def sitemap():
     return generate_sitemap(app)
 
-@app.route('/user', methods=['GET'])
-def handle_hello():
-
-    response_body = {
-        "msg": "Hello, this is your GET /user response "
-    }
-
+@app.route('/users', methods=['GET'])
+def hello_handle():
+    users = User.query.all()
+    if users == []:
+      return jsonify({"msg": "Users doesn't exist" }), 404
+    response_body = [user.serialize() for user in users]
     return jsonify(response_body), 200
+
+@app.route('/users/<int:users_id>', methods=['GET'])
+def get_users_id(users_id):
+    user = User.query.filter_by(id=users_id).first()
+    if user is None:
+        return jsonify({"msg": "User doesn't exist" }), 404
+    return jsonify(user.serialize()), 200
+
+@app.route('/planets', methods=['GET'])
+def get_planets():
+    planet = Planet.query.all()
+    if planet == []:
+        return jsonify({"msg": "Planets do not exist"}), 404
+    response_body = [planet.serialize() for planet in planet]
+    return jsonify(response_body), 200
+
+@app.route('/planets/<int:planet_id>', methods=['GET'])
+def get_planet_by_id(planet_id):
+    planet = Planet.query.filter_by(id=planet_id).first()
+    if planet is None:
+        return jsonify({"msg": "Planet does not exist"}), 404
+    return jsonify(planet.serialize()), 200
+
+@app.route('/characters', methods=['GET'])
+def get_characters():
+    characters = Character.query.all()
+    if characters == []:
+        return jsonify({"msg": "Characters do not exist"}), 404
+    response_body = [character.serialize() for character in characters]
+    return jsonify(response_body), 200
+
+@app.route('/characters/<int:character_id>', methods=['GET'])
+def get_character_by_id(character_id):
+    character = Character.query.filter_by(id=character_id).first()
+    if character is None:
+        return jsonify({"msg": "Character does not exist"}), 404
+    return jsonify(character.serialize()), 200
+
+@app.route('/favorite', methods=['GET'])
+def get_favorite():
+    favorites = Favorite.query.all()
+    if favorites == []:
+        return jsonify({"msg": "Favorites do not exist"}), 404
+    response_body = [favorite.serialize() for favorite in favorites]
+    return jsonify(response_body), 200
+
+
+@app.route('/favorite/<int:favorite_id>', methods=['GET'])
+def get_favorite_by_id(favorite_id):
+    favorite = Favorite.query.filter_by(id=favorite_id).first()
+    if favorite is None:
+        return jsonify({"msg": "Favorite does not exist"}), 404
+    return jsonify(favorite.serialize()), 200
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
